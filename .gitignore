@@ -1,0 +1,27 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+
+# Conda / virtualenv
+.env
+.venv
+env/
+venv/
+
+# Project runtime
+data/
+output/
+*.xlsx
+*.xls
+
+# IDE
+.vscode/
+*.code-workspace
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db

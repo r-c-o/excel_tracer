@@ -1,0 +1,39 @@
+# ============================================================
+# Excel Tracer - Configuration
+# ============================================================
+
+# Output directory for all generated files
+output_dir: output
+
+# Name(s) of worksheets to treat as the final output/report.
+# The tracer searches these in order and uses the first one found.
+output_sheets:
+  - Summary
+  - summary
+  - Report
+  - Output
+  - Final
+
+# SQL dialect for generate_sql.py
+# Options: oracle | postgresql | snowflake | ansi
+sql_dialect: oracle
+
+# Schema/owner prefix for generated SQL table names (Oracle only).
+# Leave blank to omit prefix.
+sql_schema: ""
+
+# Maximum substitution depth when flattening intermediate formulas.
+# Prevents infinite loops on circular references.
+max_substitution_depth: 20
+
+# When true, intermediate sheets that are entirely consumed by substitution
+# are omitted from the dependency graph output.
+prune_intermediate_sheets: false
+
+# Function translation overrides.
+# Map Excel function names to SQL equivalents if the built-in mapping is wrong.
+# Example:
+#   function_overrides:
+#     CONCATENATE: "||"
+#     IFERROR: COALESCE
+function_overrides: {}

@@ -1,0 +1,14 @@
+name: excel_tracer
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.11
+  - pip
+  - pip:
+      - openpyxl
+      - networkx
+      - pyparsing
+      - pyyaml
+      - pandas
+      - python-dotenv
