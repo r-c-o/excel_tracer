@@ -79,3 +79,59 @@ expression. Writes `output/output.sql`.
 - **Circular references**: detected by depth limit; flagged in output but not resolved.
 - **External workbook references**: `[other.xlsx]Sheet1!A1` style refs are left as-is.
 - **Array formulas (CSE)**: partially supported; complex dynamic array spill not handled.
+
+---
+
+## Project: RWA Model Convergence
+
+A two-step pandas pipeline that merges Outlook balance sheets with aggregator
+convergence data, applies adjustments, and produces upload-ready RWA workbooks.
+
+### Files
+
+| File | Purpose |
+|------|---------|
+| `rwa_constants.py` | Shared column-name literals, expected-column lists, PMF values |
+| `step1_convergence.py` | Step 1 — waterfall join, writes 4 xlsx outputs |
+| `step2_outlook_rwa.py` | Step 2 — adjustments, PMF mapping, pivots, control file |
+
+### Running
+
+```bash
+# Step 1 — waterfall join balance sheets to convergence
+python step1_convergence.py
+
+# Step 2 — adjustments, PMF mapping, pivots, control file
+python step2_outlook_rwa.py
+```
+
+Update `DATA_DIR` and `Q0` at the top of each script before running.
+
+### Data flow
+
+```
+DATA_DIR/input/
+  outlook_balancesheet_cg.xlsx   ─┐
+  outlook_balancesheet_cbna.xlsx  ├─ step1 ─→ DATA_DIR/output/
+  aggregator_for_convergence.xlsx ┘             cg_outlook_tap_env.xlsx
+                                                cbna_com_outlook_tap_env.xlsx
+                                                addon_all_cg.xlsx
+                                                addon_all_cbna.xlsx
+
+DATA_DIR/input/                               DATA_DIR/output/ (step1)
+  adjustments.xlsx         ─────────────────────────────────────────┐
+  pmf_frm_mapping.xlsx      ─┬─ step2 ─→ DATA_DIR/output/          │
+  aggregator_for_convergence ┘              cg_outlook.xlsx         │
+                                            cbna_outlook.xlsx       │
+                                            cg_outlook_pivot.xlsx   │
+                                            cbna_outlook_pivot.xlsx ┘
+                                            cg_rwa_data.xlsx
+                                            cbna_rwa_data.xlsx
+                                            control_file.xlsx
+```
+
+### Column-name conventions in `rwa_constants.py`
+
+- `*_CDE` — code columns (convergence/aggregator table only)
+- `*_DESC` (`rc.*`) — full "Level N Description" form (balance sheet + convergence)
+- Local `*_DESC` in `step2_outlook_rwa.py` — abbreviated "L4 Descr" form used in upload templates

@@ -11,4 +11,6 @@ dependencies:
       - pyparsing
       - pyyaml
       - pandas
+      - numpy
+      - python-dateutil
       - python-dotenv
